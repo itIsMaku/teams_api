@@ -1,13 +1,13 @@
 {
-    "name": "rflx_api",
+    "name": "teams_api",
     "version": "1.0.0",
-    "description": "API for reflex",
+    "description": "API for TEAMS",
     "main": "src/server.ts",
     "scripts": {
         "dev": "ts-node-dev src/app.ts",
         "build": "rm -rf build/ && prettier --write src/ && tsc"
     },
-    "author": "maku, tayfun",
+    "author": "maku",
     "license": "ISC",
     "dependencies": {
         "@types/axios": "^0.14.0",
