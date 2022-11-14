@@ -1,0 +1,25 @@
+{
+    "app_port": 8080,
+    "server_ip": "main.tror.eu",
+    "steam_key": "",
+    "txDataDir": "C:/Users/Administrator/Desktop/Main/txData",
+
+    "status_endpoints": {
+        "long": {
+            "default": "TRoR - OFFLINE - discord.gg/rflx",
+            "formatted": "TRoR - %1/%2 %3 - discord.gg/rflx",
+            "endpoint": "/status"
+        },
+        "short": {
+            "default": "OFFLINE",
+            "formatted": "%1/%2 %3",
+            "endpoint": "/status/short"
+        }
+    },
+    "profile_endpoint": "/hex/*",
+    "images_endpoints": {
+        "inventory": "/inventory/:name",
+        "vehicles": "/vehicles/:name"
+    },
+    "history_endpoint": "/players/history"
+}
