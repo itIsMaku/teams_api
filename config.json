@@ -2,6 +2,7 @@
     "app_port": 8080,
     "servers": {
         "mnrp": "wl.mnrp.cz:30120",
-        "rflx": "main.tror.eu"
+        "rflx": "main.tror.eu",
+        "militaryrp": "194.62.157.25:30112"
     }
 }

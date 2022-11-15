@@ -1,48 +1,52 @@
 import axios from "axios";
-import { statusEndpoints as endpoints, serverIp } from "../utils/configurator";
+import { servers } from "../utils/configurator";
 import logger from "../utils/logger";
 
-export const cache: { [key: string]: string } = {
-  long: endpoints.long.default,
-  short: endpoints.short.default,
-};
+export const cache: { [key: string]: {} } = {};
 
 export function cachePlayers() {
   logger.info("STATUS | Caching players...");
-  axios
-    .get(`https://${serverIp}/dynamic.json`)
-    .then((response) => {
-      let data = response.data;
-      let players = data.clients;
-      let maxPlayers = data.sv_maxclients;
-      axios
-        .get(`https://${serverIp}/info.json`)
-        .then((response) => {
-          data = response.data;
-          let queueAddon = "";
-          if (data.vars.queue) {
-            let queueSize = JSON.parse(data.vars.queue).length;
-            if (queueSize > 0) {
-              queueAddon = ` [${queueSize}]`;
+  Object.keys(servers).forEach((key) => {
+    let adress = servers[key];
+    let data;
+    axios
+      .get(`http://${adress}/dynamic.json`)
+      .then((res) => {
+        data = res.data;
+        let players = data.clients;
+        let maxPlayers = data.sv_maxclients;
+        cache[key] = {
+          players: players,
+          maxPlayers: maxPlayers,
+          queue: -1,
+        };
+        axios
+          .get(`http://${adress}/info.json`)
+          .then((res) => {
+            data = res.data;
+            let queue = 0;
+            if (data.vars.queue) {
+              queue = JSON.parse(data.vars.queue).length;
             }
-          }
-          Object.keys(cache).forEach((key) => {
-            cache[key] = `${endpoints[key].formatted
-              .replace("%1", players)
-              .replace("%2", maxPlayers)
-              .replace("%3", queueAddon)}`;
-          });
-        })
-        .catch((error) => catchError(error));
-    })
-    .catch((error) => catchError(error));
+            cache[key] = {
+              players: players,
+              maxPlayers: maxPlayers,
+              queue: queue,
+            };
+          })
+          .catch((error) => catchError(key, error));
+      })
+      .catch((error) => catchError(key, error));
+  });
 }
 
-function catchError(error: any) {
+function catchError(key: string, error: any) {
   logger.error(error);
-  Object.keys(cache).forEach((key) => {
-    cache[key] = `${endpoints[key].default}`;
-  });
+  cache[key] = {
+    players: "offline",
+    maxPlayers: "offline",
+    queue: "offline",
+  };
 }
 
 export function updater() {
