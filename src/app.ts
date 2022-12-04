@@ -1,4 +1,5 @@
 import app from "express";
+import axios from "axios";
 import routes from "./routes/router";
 import { cachePlayers, updater as statusUpdater } from "./services/status";
 import { appPort } from "./utils/configurator";
@@ -22,3 +23,24 @@ httpServer.listen(port, () => {
 
 cachePlayers();
 statusUpdater();
+/*
+let last = 0;
+function get() {
+  axios
+    .get(`http://main.tror.eu/players.json`)
+    .then((res) => {
+      //logger.info("Sending request...");
+      if (res.data.length < 1) {
+        logger.warn(`Waiting 1 second before another request... ${last}`);
+        setTimeout(get, 1000);
+        return;
+      } else {
+        last++;
+        logger.info(`Request successfully sent. ${last}`);
+      }
+      //logger.info(res.data);
+      get();
+    })
+    .catch((error) => logger.error(error));
+}
+*/
